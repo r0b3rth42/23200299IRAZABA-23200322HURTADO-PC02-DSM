@@ -114,12 +114,20 @@ fun ApodItemCard(
                         .background(Color.DarkGray),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Contenido en video",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "▶ Contenido en video",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Toca para ver los detalles",
+                            color = Color.LightGray,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             } else {
                 AsyncImage(
@@ -222,7 +230,7 @@ fun ApodDetailScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Contenido en video\n${apod.url}",
+                            text = "▶ Contenido en video\nEnlace: ${apod.url}",
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp

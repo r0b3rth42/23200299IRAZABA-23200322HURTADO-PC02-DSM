@@ -5,12 +5,17 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApodApiService {
-    @GET("planetary/apod")
+    @GET("wp-json/wp/v2/apod-basic")
     suspend fun getApod(
         @Query("date") date: String? = null
     ): ApodDto
 
-    @GET("planetary/apod")
+    @GET("wp-json/wp/v2/apod-basic")
+    suspend fun getApodCount(
+        @Query("count") count: Int = 7
+    ): List<ApodDto>
+
+    @GET("wp-json/wp/v2/apod-basic")
     suspend fun getApodRange(
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String

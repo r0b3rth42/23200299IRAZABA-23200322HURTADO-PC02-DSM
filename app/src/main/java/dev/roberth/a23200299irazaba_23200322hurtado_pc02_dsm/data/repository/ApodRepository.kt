@@ -1,5 +1,6 @@
 package dev.roberth.a23200299irazaba_23200322hurtado_pc02_dsm.data.repository
 
+import android.util.Log
 import dev.roberth.a23200299irazaba_23200322hurtado_pc02_dsm.data.local.dao.ApodDao
 import dev.roberth.a23200299irazaba_23200322hurtado_pc02_dsm.data.local.entity.ApodEntity
 import dev.roberth.a23200299irazaba_23200322hurtado_pc02_dsm.data.remote.ApodApiService
@@ -19,15 +20,24 @@ class ApodRepository(
     fun getApodByDate(date: String): Flow<ApodEntity?> = apodDao.getApodByDate(date)
 
     suspend fun refreshApods() {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val calendar = Calendar.getInstance()
-        val endDateStr = dateFormat.format(calendar.time)
-        calendar.add(Calendar.DAY_OF_YEAR, -6)
-        val startDateStr = dateFormat.format(calendar.time)
-
         try {
-            val responseDtos = apiService.getApodRange(startDate = startDateStr, endDate = endDateStr)
             val favoriteDates = apodDao.getFavoriteDates().toSet()
+
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val calendar = Calendar.getInstance()
+            val endDateStr = dateFormat.format(calendar.time)
+            calendar.add(Calendar.DAY_OF_YEAR, -6)
+            val startDateStr = dateFormat.format(calendar.time)
+
+            val responseDtos = try {
+                apiService.getApodRange(startDate = startDateStr, endDate = endDateStr)
+            } catch (e: Exception) {
+                try {
+                    apiService.getApodCount(count = 7)
+                } catch (e2: Exception) {
+                    listOf(apiService.getApod())
+                }
+            }
 
             val entities = responseDtos.map { dto ->
                 val entity = dto.toEntity()
@@ -36,17 +46,13 @@ class ApodRepository(
                 } else {
                     entity
                 }
+            }.filter { it.date.isNotEmpty() }
+
+            if (entities.isNotEmpty()) {
+                apodDao.insertApods(entities)
             }
-            apodDao.insertApods(entities)
         } catch (e: Exception) {
-            try {
-                val singleDto = apiService.getApod()
-                val favoriteDates = apodDao.getFavoriteDates().toSet()
-                val entity = singleDto.toEntity()
-                val updatedEntity = if (favoriteDates.contains(entity.date)) entity.copy(isFavorite = true) else entity
-                apodDao.insertApod(updatedEntity)
-            } catch (ignored: Exception) {
-            }
+            Log.e("ApodRepository", "Error refreshing APODs", e)
         }
     }
 
