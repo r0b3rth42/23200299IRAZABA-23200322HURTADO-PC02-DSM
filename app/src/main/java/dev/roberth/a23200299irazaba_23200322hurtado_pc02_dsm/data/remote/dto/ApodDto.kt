@@ -21,7 +21,9 @@ data class ApodDto(
  * Extension function to map ApodDto to Room ApodEntity securely with null handling.
  */
 fun ApodDto.toEntity(): ApodEntity {
-    val displayUrl = url ?: hdUrl ?: permalink.orEmpty()
+    // In apod-basic endpoint, hdUrl is the direct image URL (https://assets.science.nasa.gov/...)
+    // whereas 'url' and 'permalink' are HTML web page links.
+    val directImageUrl = hdUrl ?: url ?: permalink.orEmpty()
     val displayCredit = when {
         !copyright.isNullOrBlank() -> copyright
         !credit.isNullOrBlank() -> credit
@@ -32,7 +34,7 @@ fun ApodDto.toEntity(): ApodEntity {
         date = date.orEmpty(),
         title = title ?: "Sin título",
         explanation = explanation ?: "Sin descripción disponible.",
-        url = displayUrl,
+        url = directImageUrl,
         mediaType = mediaType ?: "image",
         hdUrl = hdUrl ?: url,
         copyright = displayCredit
