@@ -1,4 +1,4 @@
 Irazaba: Asteroides
 Hurtado: APOD
 
-revisión y validacion: ambos
+revisión y validacion: ambos 
