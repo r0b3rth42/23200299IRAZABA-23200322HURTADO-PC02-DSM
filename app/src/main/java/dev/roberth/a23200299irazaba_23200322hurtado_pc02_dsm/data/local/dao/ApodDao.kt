@@ -18,21 +18,18 @@ interface ApodDao {
     @Query("SELECT * FROM apod_table WHERE date = :date LIMIT 1")
     fun getApodByDate(date: String): Flow<ApodEntity?>
 
-    @Query("SELECT * FROM apod_table WHERE date = :date LIMIT 1")
-    suspend fun getApodDirect(date: String): ApodEntity?
-
     @Query("SELECT date FROM apod_table WHERE isFavorite = 1")
     suspend fun getFavoriteDates(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertApods(apods: List<ApodEntity>)
+    suspend fun insertApods(apods: List<ApodEntity>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertApod(apod: ApodEntity)
+    suspend fun insertApod(apod: ApodEntity): Long
 
     @Query("UPDATE apod_table SET isFavorite = :isFavorite WHERE date = :date")
-    suspend fun updateFavoriteStatus(date: String, isFavorite: Boolean)
+    suspend fun updateFavoriteStatus(date: String, isFavorite: Boolean): Int
 
     @Query("DELETE FROM apod_table")
-    suspend fun clearApods()
+    suspend fun clearApods(): Int
 }

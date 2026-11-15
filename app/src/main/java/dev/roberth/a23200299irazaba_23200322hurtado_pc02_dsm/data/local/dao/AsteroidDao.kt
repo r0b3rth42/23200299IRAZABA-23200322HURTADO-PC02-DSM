@@ -25,11 +25,11 @@ interface AsteroidDao {
     suspend fun getFavoriteIds(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAsteroids(asteroids: List<AsteroidEntity>)
+    suspend fun insertAsteroids(asteroids: List<AsteroidEntity>): List<Long>
 
     @Query("UPDATE asteroid_table SET isFavorite = :isFavorite WHERE id = :id")
-    suspend fun updateFavoriteStatus(id: String, isFavorite: Boolean)
+    suspend fun updateFavoriteStatus(id: String, isFavorite: Boolean): Int
 
     @Query("DELETE FROM asteroid_table")
-    suspend fun clearAsteroids()
+    suspend fun clearAsteroids(): Int
 }
