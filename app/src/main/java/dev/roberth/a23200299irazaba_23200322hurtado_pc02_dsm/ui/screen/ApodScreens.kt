@@ -249,13 +249,19 @@ fun ApodDetailScreen(
 
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(text = apod.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(text = "Fecha: ${apod.date}", fontSize = 14.sp, color = Color.Gray)
                     if (!apod.copyright.isNullOrEmpty()) {
-                        Text(text = "Crédito: ${apod.copyright}", fontSize = 12.sp, color = Color.DarkGray)
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(text = "Crédito: ${apod.copyright}", fontSize = 13.sp, color = Color.DarkGray)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = apod.explanation, fontSize = 14.sp, lineHeight = 20.sp)
+                    Text(
+                        text = apod.explanation,
+                        fontSize = 15.sp,
+                        lineHeight = 22.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
             }
         }
